@@ -10,7 +10,7 @@ export default function Base() {
 
     return (
       <Button variant="contained" color="primary">
-        Hello World
+        {test.test.arvo}
       </Button>
     );
   }

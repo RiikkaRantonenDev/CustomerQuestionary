@@ -1,4 +1,4 @@
-import { combineReducers } from './node_modules/@reduxjs/toolkit';
+import { combineReducers } from '@reduxjs/toolkit';
 import testReducer from './test/testSlice';
 
 const rootReducer = combineReducers({

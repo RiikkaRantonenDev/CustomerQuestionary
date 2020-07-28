@@ -10,7 +10,7 @@ export default function Base() {
 
     return (
       <Button variant="contained" color="primary">
-        {test.test.arvo}
+        Testi arvo {test.test.arvo}
       </Button>
     );
   }

@@ -1,8 +1,8 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import testReducer from './test/testSlice';
+import forecastReducer from './forecast/forecastSlice';
 
 const rootReducer = combineReducers({
-    testReducer
+    forecastReducer
     // tähän lisätään sitten redusereita kun niitä luodaan.
 })
 

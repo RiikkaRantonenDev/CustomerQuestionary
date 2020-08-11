@@ -4,12 +4,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../Store/rootReducer';
 import axios from 'axios';
 import {IForecast, setForecast} from '../../Store/forecast/forecastSlice';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import { AdminMain } from '../Admin';
+import {QuestionnaireMain} from './../Questionnaire/index'
+import { QuestionManager } from '../Admin/questionManager';
 
-export default function Base() {
-    const forecast = useSelector((state: RootState) => state.forecastReducer);
+export const Base = () => {
+    const forecast = useSelector((state: RootState) => state.loginReducer);
     const dispatch = useDispatch();
-
-
 
     const getData = () => {
       axios({
@@ -22,13 +24,15 @@ export default function Base() {
     }
 
     return (
-      <Box>
-      <Button variant="contained" color="primary" onClick={getData}>
-        Testi arvo
-      </Button>
-      <TextField value={forecast.forecasts}>
-        
-      </TextField>
-      </Box>
+      <>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/admin" component={AdminMain}></Route>
+          <Route path="/admin/management" component={QuestionManager}></Route>
+          <Route path="/" component={QuestionnaireMain}></Route>
+        </Switch>
+      </BrowserRouter>
+    </>
     );
+    
   }

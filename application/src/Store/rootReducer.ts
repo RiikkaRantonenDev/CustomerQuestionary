@@ -1,8 +1,8 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import forecastReducer from './forecast/forecastSlice';
+import loginReducer from './Login/loginSlice';
 
 const rootReducer = combineReducers({
-    forecastReducer
+    loginReducer
     // tähän lisätään sitten redusereita kun niitä luodaan.
 })
 

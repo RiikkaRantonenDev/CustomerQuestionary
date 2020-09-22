@@ -9,20 +9,14 @@ import { setLogin, ILogin } from '../../Store/Login/loginSlice';
 import axios from 'axios';
 import { ILoginResponse } from '../../Interfaces/interface';
 
-
 interface LoginRequest {
     key: string;
 }
 
-const moveTo = () => {
-    let history = useHistory();
-    history.push("/management");
-}
-
-
 export const AdminMain = () => {
     const { handleSubmit, register, errors, getValues } = useForm<LoginRequest>();
 
+    let history = useHistory();
     const loginState = useSelector((state: RootState) => state.loginReducer);
     const dispatch = useDispatch();
 
@@ -31,7 +25,6 @@ export const AdminMain = () => {
 
     const onSubmit = (values: LoginRequest) =>
     { 
-        console.log(values);
             axios({
               method: 'POST',
               //headers: {    'Content-Type': 'text/plain'},
@@ -44,9 +37,9 @@ export const AdminMain = () => {
                 if (res.data.result) 
                 {
                     dispatch(setLogin({key: values.key}));
-
+                    history.push("/management");
                 }
-                else if(res.data.result == false) {
+                else {
                     alert("APIkey väärin")
                 }
             })

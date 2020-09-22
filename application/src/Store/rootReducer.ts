@@ -1,8 +1,12 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import loginReducer from './Login/loginSlice';
+import questionReducer from './Questions/questionsSlice';
+import toggleReducer from './Toggles/toggleSlice';
 
 const rootReducer = combineReducers({
-    loginReducer
+    loginReducer,
+    questionReducer,
+    toggleReducer
     // tähän lisätään sitten redusereita kun niitä luodaan.
 })
 

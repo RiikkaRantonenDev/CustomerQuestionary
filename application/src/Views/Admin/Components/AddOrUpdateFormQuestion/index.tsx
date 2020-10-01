@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { useForm } from "react-hook-form";
-import { QuestionType, IQuestion } from '../../../Interfaces/interface';
+import { QuestionType, IQuestion } from '../../../../Interfaces/interface';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../../Store/rootReducer';
+import { RootState } from '../../../../Store/rootReducer';
 import {Add, Delete } from '@material-ui/icons'
 import { Box, Radio, TextField, Select, MenuItem, Button, Grid, Icon, FormLabel, Paper, createStyles, makeStyles, Theme, Checkbox } from '@material-ui/core';
 
-import { setAddQuestionComponentProperty, removeAnswerOption, setQuestions, refreshAddQuestionComponent, clearForm } from '../../../Store/Questions/questionsSlice';
-import { toggle } from '../../../Store/Toggles/toggleSlice';
+import { setAddQuestionComponentProperty, removeAnswerOption, setQuestions, refreshAddQuestionComponent, clearForm } from '../../../../Store/Questions/questionsSlice';
+import { toggle } from '../../../../Store/Toggles/toggleSlice';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
@@ -51,8 +51,9 @@ export const QuestionForm = () => {
     const classes = useStyles();
     const params: { [paramName: string]: string | number | boolean | undefined  } = useParams();
 
+    // TODO: Check purpose of this
     if (!QuestionFormState.isNewQuestion){
-        dispatch(setAddQuestionComponentProperty)
+        //dispatch(setAddQuestionComponentProperty)
     }
 
     const onSubmit = (data: QuestionForm) => {
@@ -64,20 +65,26 @@ export const QuestionForm = () => {
             data: QuestionFormState.addQuestionComponent
           }).then(res => {
             fetchQuestionData();
+            dispatch(toggle({field: "questionList", value: true}));
+            dispatch(toggle({field: "dialog1", value: false}));
           });
       }
       else {
         axios({
             method: 'PUT',
-            url: "https://localhost:44385/questions/" + QuestionFormState.addQuestionComponent.questionId,
+            url: "https://localhost:44385/questions/"  + params.id + "/" + QuestionFormState.addQuestionComponent.questionId,
             data: QuestionFormState.addQuestionComponent
           }).then(res => {
             fetchQuestionData();
+            dispatch(toggle({field: "questionList", value: true}));
+            dispatch(toggle({field: "dialog1", value: false}));
           });
         }
     }
     
+    // Refresh page when QuestionType is changed to toggle answerOptions
     useEffect(() => {}, [QuestionFormState.addQuestionComponent.questionType])
+
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         dispatch(setAddQuestionComponentProperty({key: "questionType", value: event.target.value as number}));
         setValue("questionType", event.target.value as number, {shouldValidate: true});

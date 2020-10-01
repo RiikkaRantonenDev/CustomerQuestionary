@@ -14,6 +14,7 @@ export interface IQuestion{
     questionText: string;
     questionType: QuestionType;
     answerOptions: IAnswerOption[];
+    orderId: number;
     hasAdditionalOption: boolean; // muu, mikä?
   }
 

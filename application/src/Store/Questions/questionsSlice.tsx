@@ -9,6 +9,7 @@ export interface QuestionFormState {
     refreshAddQuestionComponent: boolean;
     addFormComponent: IForm;
     forms: IForm[];
+    activeForm: IForm;
 }
 
 const initialState: QuestionFormState = {
@@ -19,7 +20,8 @@ const initialState: QuestionFormState = {
         questionText: "",
         questionType: QuestionType.textField,
         answerOptions: [],
-        hasAdditionalOption: false
+        hasAdditionalOption: false,
+        orderId: 0
     },
     isNewQuestion: false,
     refreshAddQuestionComponent: false,
@@ -30,7 +32,8 @@ const initialState: QuestionFormState = {
         questionnaireDescription: "",
        // editDate: new Date()
 },
-    forms: []
+    forms: [],
+    activeForm: {questionnaireFormId: "00000000-0000-0000-0000-000000000000", questionnaireName: ""}
 }
 
 const Questions = createSlice({
@@ -79,7 +82,8 @@ const Questions = createSlice({
                 questionText: "",
                 questionType: QuestionType.textField,
                 answerOptions: [],
-                hasAdditionalOption: false
+                hasAdditionalOption: false,
+                orderId: 0
             }
         },
         refreshAddQuestionComponent(state, action: PayloadAction<boolean>){
@@ -87,6 +91,12 @@ const Questions = createSlice({
         },
         setQuestionnaireFormProperty(state, action: PayloadAction<{ key: string; value: any }>) {
             state.addFormComponent[action.payload.key] = action.payload.value
+        },
+        setAddQuestionnaireForm(state, action: PayloadAction<IForm>){
+            state.addFormComponent = action.payload;
+        },
+        setActiveForm(state, action: PayloadAction<IForm>){
+            state.activeForm = action.payload;
         }
     }
 });
@@ -101,7 +111,9 @@ export const {
     setAddQuestionComponent,
     clearForm,
     refreshAddQuestionComponent,
-    setQuestionnaireFormProperty
+    setQuestionnaireFormProperty,
+    setAddQuestionnaireForm,
+    setActiveForm
 } = Questions.actions;
 
 export default Questions.reducer;

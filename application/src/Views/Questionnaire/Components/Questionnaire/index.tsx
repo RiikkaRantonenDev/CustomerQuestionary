@@ -1,8 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../Store/rootReducer';
+import { RootState } from '../../../../Store/rootReducer';
 import { Box, Paper, createStyles, makeStyles, Theme, Grid, Radio, Select, FormControlLabel, RadioGroup, TextField, MenuItem } from '@material-ui/core';
-import { QuestionType, IQuestion } from '../../../Interfaces/interface';
+import { QuestionType, IQuestion } from '../../../../Interfaces/interface';
 import { flexbox } from '@material-ui/system';
 import { CheckBox } from '@material-ui/icons';
 import { FormProvider } from 'react-hook-form';

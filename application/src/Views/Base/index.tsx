@@ -4,11 +4,11 @@ import { RootState } from '../../Store/rootReducer';
 import axios from 'axios';
 import {IForecast, setForecast} from '../../Store/forecast/forecastSlice';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
-import { AdminMain } from '../Admin';
-import {QuestionnaireMain} from './../Questionnaire/index'
-import { QuestionManager } from '../Admin/questionManager';
-import { ManagementPage } from '../Admin/management';
-import { CreateNewForm } from '../Admin/Components/createNewForm';
+import { LoginPage } from '../Admin/LoginPage';
+import {QuestionnaireForm} from '../Questionnaire/QuestionnaireForm/index'
+import { EditForm } from '../Admin/EditForm';
+import { ManagementPage as FormManagement } from '../Admin/FormManagement';
+import { CreateForm } from '../Admin/Components/CreateForm';
 
 export const Base = () => {
     const dispatch = useDispatch();
@@ -17,11 +17,11 @@ export const Base = () => {
       <>
       <BrowserRouter>
         <Switch>
-          <Route path="/createForm" component={CreateNewForm}></Route>
-          <Route path="/admin" component={AdminMain}></Route>
-          <Route path="/management" component={ManagementPage}></Route>
-          <Route path="/edit/:id" component={QuestionManager}></Route>
-          <Route path="/" component={QuestionnaireMain}></Route>
+          <Route path="/form/create" component={CreateForm}></Route>
+          <Route path="/login" component={LoginPage}></Route>
+          <Route path="/form/management" component={FormManagement}></Route>
+          <Route path="/form/edit/:id" component={EditForm}></Route>
+          <Route path="/form/view/:id" component={QuestionnaireForm}></Route>
 
         </Switch>
       </BrowserRouter>

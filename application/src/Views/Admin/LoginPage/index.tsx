@@ -3,17 +3,17 @@ import React, { HtmlHTMLAttributes, useEffect } from 'react';
 import {Link, Router, Switch, useHistory} from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../Store/rootReducer';
+import { RootState } from '../../../Store/rootReducer';
 import { TextField, Button, Box } from '@material-ui/core';
-import { setLogin, ILogin } from '../../Store/Login/loginSlice';
+import { setLogin, ILogin } from '../../../Store/Login/loginSlice';
 import axios from 'axios';
-import { ILoginResponse } from '../../Interfaces/interface';
+import { ILoginResponse } from '../../../Interfaces/interface';
 
 interface LoginRequest {
     key: string;
 }
 
-export const AdminMain = () => {
+export const LoginPage = () => {
     const { handleSubmit, register, errors, getValues } = useForm<LoginRequest>();
 
     let history = useHistory();
@@ -37,7 +37,7 @@ export const AdminMain = () => {
                 if (res.data.result) 
                 {
                     dispatch(setLogin({key: values.key}));
-                    history.push("/management");
+                    history.push("/form/management");
                 }
                 else {
                     alert("APIkey väärin")

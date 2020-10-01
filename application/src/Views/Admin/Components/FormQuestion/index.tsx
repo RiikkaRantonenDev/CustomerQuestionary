@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../../Store/rootReducer';
+import { RootState } from '../../../../Store/rootReducer';
 import { Box, Grid, Paper, makeStyles, Theme, createStyles, Button, TextField } from '@material-ui/core';
-import { QuestionForm } from './questionForm';
-import { toggle } from '../../../Store/Toggles/toggleSlice';
+import { QuestionForm } from '../AddOrUpdateFormQuestion';
+import { toggle } from '../../../../Store/Toggles/toggleSlice';
 import axios from 'axios';
-import { IForm, IQuestion, QuestionType } from '../../../Interfaces/interface';
-import { setQuestions, setIsNewQuestion, setAddQuestionComponentProperty, setAddQuestionComponent, clearForm, refreshAddQuestionComponent } from '../../../Store/Questions/questionsSlice';
+import { IForm, IQuestion, QuestionType } from '../../../../Interfaces/interface';
+import { setQuestions, setIsNewQuestion, setAddQuestionComponentProperty, setAddQuestionComponent, clearForm, refreshAddQuestionComponent } from '../../../../Store/Questions/questionsSlice';
 import { useParams } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>

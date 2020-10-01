@@ -1,21 +1,44 @@
 import React from 'react';
 import axios from 'axios';
-import { Box, Button, Grid, Paper, TextField } from '@material-ui/core';
+import { Box, Button, createStyles, Grid, makeStyles, Paper, TextField, Theme } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../Store/rootReducer';
+import { RootState } from '../../../../Store/rootReducer';
 import { useForm } from 'react-hook-form';
-import { IForm, IQuestion } from '../../../Interfaces/interface';
-import { setQuestionnaireFormProperty } from '../../../Store/Questions/questionsSlice';
+import { IForm, IQuestion } from '../../../../Interfaces/interface';
+import { setQuestionnaireFormProperty } from '../../../../Store/Questions/questionsSlice';
 import { useHistory } from 'react-router-dom';
+import { Navigation } from '../Navigation';
+
 
 const postNewForm = (values: IForm) => {
 
 }
 
-export const CreateNewForm = () => {
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing(1),
+      //textAlign: 'center',
+      color: theme.palette.text.secondary,
+    },
+    backgroundPaper: {
+        margin: '5rem',
+        padding: '0.5rem 0.5rem 1.5rem 0.5rem'
+    },
+    fieldHeader: {
+        fontWeight: "bold"
+    }
+  }),
+);
+
+export const CreateForm = () => {
     const FormState = useSelector((state: RootState) => state.questionReducer);
     const { handleSubmit, register, errors, getValues, setValue } = useForm<IForm>({defaultValues: FormState.addFormComponent});
     const dispatch = useDispatch();
+    const styles = useStyles();
     let history = useHistory();
     //const classes = useStyles();
 
@@ -30,14 +53,15 @@ export const CreateNewForm = () => {
             data: values
           }).then(res => { 
             console.log(values);
-            history.push("/management");
+            history.push("/form/management");
           })
     }
 
     return(
         <>
+            <Navigation currentPage="Luo lomake"></Navigation>
             <Box>
-                <Paper>
+                <Paper className={styles.backgroundPaper}>
                     <Grid container direction="column">
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Grid item>

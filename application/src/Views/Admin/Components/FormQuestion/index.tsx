@@ -66,11 +66,17 @@ export const QuestionList = () => {
 
     function addAnswerOptions(question: IQuestion) {
       if (question.answerOptions !== null) {
-      return (question.answerOptions.map(answer =>
-           <Box className={classes.paper}>
+      return( 
+        <>
+        <ul style={{margin: "0"}}>
+        {question.answerOptions.map(answer =>
+           <li>
              {answer.text}
-          </Box>
+          </li>
           )
+        }
+      </ul>
+      </>
       )}
     }
 
@@ -110,6 +116,9 @@ export const QuestionList = () => {
                       <Box><span className={classes.fieldHeader}>Tyyppi</span></Box> 
                       <Box>{QuestionType[question.questionType]}</Box>
                     </Box>
+                    <Box className={classes.paper}>
+                    <span className={classes.fieldHeader}>Vastausvaihtoehdot</span>
+                    </Box>
                     {addAnswerOptions(question)} 
                     <Box className={classes.paper}>
                       <Box>
@@ -117,6 +126,14 @@ export const QuestionList = () => {
                       </Box>
                       <Box>
                          {question.hasAdditionalOption ? "Kyllä" : "Ei"}
+                      </Box>
+                    </Box>
+                    <Box className={classes.paper}>
+                      <Box>
+                        <span className={classes.fieldHeader}>Pakollinen:</span>
+                      </Box>
+                      <Box>
+                         {question.required ? "Kyllä" : "Ei"}
                       </Box>
                     </Box>
                   </Grid>

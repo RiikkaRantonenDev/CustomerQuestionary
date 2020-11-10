@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import { IForm, IQuestion, QuestionType } from '../../Interfaces/interface';
+import { IAnswerOption, IForm, IQuestion, QuestionType } from '../../Interfaces/interface';
 
 export interface QuestionFormState {
     // lisää tähän kaikki steitit joita tämä store tarjoaa, nämä käyttävät interfaceja tyyppeinä
@@ -10,6 +10,8 @@ export interface QuestionFormState {
     addFormComponent: IForm;
     forms: IForm[];
     activeForm: IForm;
+    answers?: IQuestion[];
+    editAnswerOption?: IAnswerOption;
 }
 
 const initialState: QuestionFormState = {
@@ -21,7 +23,10 @@ const initialState: QuestionFormState = {
         questionType: QuestionType.textField,
         answerOptions: [],
         hasAdditionalOption: false,
-        orderId: 0
+        orderId: 0,
+        multiSelectionMax: 0,
+        multiSelectionMin: 0,
+        required: false
     },
     isNewQuestion: false,
     refreshAddQuestionComponent: false,
@@ -68,7 +73,7 @@ const Questions = createSlice({
         setAddQuestionComponent(state, action: PayloadAction<IQuestion>){
             state.addQuestionComponent = action.payload;
         },
-        removeAnswerOption(state, action: PayloadAction<number>){
+        removeAnswerOption(state, action: PayloadAction<string>){
             const removed = state.addQuestionComponent.answerOptions.filter(item => item.id !== action.payload);
             state.addQuestionComponent.answerOptions = removed;
         },
@@ -83,7 +88,10 @@ const Questions = createSlice({
                 questionType: QuestionType.textField,
                 answerOptions: [],
                 hasAdditionalOption: false,
-                orderId: 0
+                orderId: 0,
+                multiSelectionMax: 0,
+                multiSelectionMin: 0,
+                required: false
             }
         },
         refreshAddQuestionComponent(state, action: PayloadAction<boolean>){
@@ -97,6 +105,24 @@ const Questions = createSlice({
         },
         setActiveForm(state, action: PayloadAction<IForm>){
             state.activeForm = action.payload;
+        },
+        setEditAnswerOption(state, action: PayloadAction<IAnswerOption>){
+            state.editAnswerOption = action.payload;
+        },
+        setAnswer(state, action: PayloadAction<{value: any; id:string, answerId:string }>){
+            let question = state.questions.find(question => question.questionId == action.payload.id);
+            if(question) {
+                question.answerOptions[action.payload.answerId].state = action.payload.value;
+            }
+        },
+        setUpdateAnswerOption(state, action: PayloadAction<IAnswerOption>){
+            let answerOption = state.addQuestionComponent.answerOptions.findIndex(option => option.id == action.payload.id);
+            if(answerOption != null) {
+                state.addQuestionComponent.answerOptions[answerOption].text = action.payload.text
+            };
+        },
+        removeAnswerOptions(state, action: PayloadAction<number>){
+            state.addQuestionComponent.answerOptions = [];
         }
     }
 });
@@ -113,7 +139,11 @@ export const {
     refreshAddQuestionComponent,
     setQuestionnaireFormProperty,
     setAddQuestionnaireForm,
-    setActiveForm
+    setActiveForm,
+    setAnswer,
+    setEditAnswerOption,
+    setUpdateAnswerOption,
+    removeAnswerOptions
 } = Questions.actions;
 
 export default Questions.reducer;

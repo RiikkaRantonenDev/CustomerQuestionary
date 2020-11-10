@@ -1,12 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import { IQuestion } from '../../Interfaces/interface';
-/* import {
-    lisää tähän interfacet joita steitti käyttää
-} from '~/src/Interfaces/test'; */
 
 interface IDialogs {
     field: 
-    | "dialog1" | "answerField" | "questionList";
+    | "dialog1" | "answerField" | "questionList" | "showMultiSelectRangeComponent" | "editAnswerOptionTextField";
     value: boolean;
 }
 
@@ -15,13 +11,17 @@ interface IToggleState {
     dialog1: boolean;
     answerField: boolean;
     questionList;
+    showMultiSelectRangeComponent: boolean;
+    editAnswerOptionTextField: boolean;
 }
 
 const initialState: IToggleState = {
     // lisää tähän kaikki steitin initiaalit.
     dialog1: false,
     answerField: false,
-    questionList: true
+    questionList: true,
+    showMultiSelectRangeComponent: false,
+    editAnswerOptionTextField: false
 }
 
 const Toggle = createSlice({

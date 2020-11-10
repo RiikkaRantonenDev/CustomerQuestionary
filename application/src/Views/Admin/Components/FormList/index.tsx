@@ -110,8 +110,9 @@ export const QuestionFormList = () => {
                       </Grid>
                       <Grid item>
                         <Grid container direction={"column"}>
-                        {question.answerOptions.map(option =>
-                            <Grid item><span className={classes.questionnaireQuestionText}>{option.text}</span></Grid>)}
+                          
+                        {question.answerOptions ? question.answerOptions.map(option =>
+                            <Grid item><span className={classes.questionnaireQuestionText}>{option.text}</span></Grid>) : ""}
                         </Grid>
                       </Grid>
                     </Grid>
@@ -124,6 +125,7 @@ export const QuestionFormList = () => {
                 history.push("/form/edit/" + form.questionnaireFormId);}}>Muokkaa</Button>
               <Button onClick={() => history.push("/form/view/" + form.questionnaireFormId)}>Esikatsele</Button>
               <Button onClick={() => deleteQuestionnaireForm(form.questionnaireFormId)}>Poista</Button>
+              <Button onClick={() => history.push("/form/reports/" + form.questionnaireFormId)}>Tulokset</Button>
             </Typography>
           </AccordionDetails>
         </Accordion>)}

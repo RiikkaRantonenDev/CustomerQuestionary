@@ -9,6 +9,7 @@ import {QuestionnaireForm} from '../Questionnaire/QuestionnaireForm/index'
 import { EditForm } from '../Admin/EditForm';
 import { ManagementPage as FormManagement } from '../Admin/FormManagement';
 import { CreateForm } from '../Admin/Components/CreateForm';
+import { Reports } from '../Admin/Raports';
 
 export const Base = () => {
     const dispatch = useDispatch();
@@ -22,6 +23,7 @@ export const Base = () => {
           <Route path="/form/management" component={FormManagement}></Route>
           <Route path="/form/edit/:id" component={EditForm}></Route>
           <Route path="/form/view/:id" component={QuestionnaireForm}></Route>
+          <Route path="/form/reports/:id" component={Reports}></Route>
 
         </Switch>
       </BrowserRouter>

@@ -4,9 +4,10 @@ export interface ILoginResponse {
     result: boolean;
 }
 
-interface IAnswerOption {
-  id: number;
+export interface IAnswerOption {
+  id: string;
   text: string;
+  state: boolean;
 }
 
 export interface IQuestion{
@@ -16,6 +17,10 @@ export interface IQuestion{
     answerOptions: IAnswerOption[];
     orderId: number;
     hasAdditionalOption: boolean; // muu, mikä?
+    endUserAnswer?: string | {};
+    multiSelectionMin: number;
+    multiSelectionMax: number;
+    required: boolean;
   }
 
 
@@ -36,3 +41,16 @@ export interface IForm {
  // editDate?: Date;
   questions?: IQuestion[];
 }
+
+/*public class FormAnswer
+{
+    public ObjectId _id { get; set; }
+    
+    public List<Answer> answers { get; set; }
+}
+
+public class Answer
+{
+    public Guid questionId { get; set; }
+    public List<string> content { get; set; }
+}*/

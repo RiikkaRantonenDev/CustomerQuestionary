@@ -97,7 +97,7 @@ export const QuestionForm = () => {
         if(questionTypeId > 3)
         {
             alert("Olet vaihtamassa kysymystä tyypiksi, jolla ei ole vastausvaihtoehtoja. Vastausvaihtoehdot poistetaan. Jatka?");
-            dispatch(removeAnswerOptions(questionTypeId));
+            //dispatch(removeAnswerOptions(questionTypeId));
         }
     }
 

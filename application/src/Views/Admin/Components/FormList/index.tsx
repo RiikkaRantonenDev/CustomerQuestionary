@@ -64,6 +64,7 @@ export const QuestionFormList = () => {
           method: 'GET',
           url: "https://localhost:44385/questionnaireForm"
         }).then(res => {
+          console.log(res.data);
           dispatch(setForms(res.data))
         })
   }

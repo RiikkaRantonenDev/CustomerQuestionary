@@ -49,7 +49,7 @@ export const QuestionList = () => {
         //headers: [{key: loginInfo.login.key}],
         url: "https://localhost:44385/questions/" + id
       }).then(res => {
-        console.log(res.data.questions);
+        console.log(res.data);
         if(res.data.questions) dispatch(setQuestions(res.data.questions as IQuestion[]))
       })
     }

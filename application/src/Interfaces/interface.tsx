@@ -17,7 +17,6 @@ export interface IQuestion{
     answerOptions: IAnswerOption[];
     orderId: number;
     hasAdditionalOption: boolean; // muu, mikä?
-    endUserAnswer?: string | {};
     multiSelectionMin: number;
     multiSelectionMax: number;
     required: boolean;

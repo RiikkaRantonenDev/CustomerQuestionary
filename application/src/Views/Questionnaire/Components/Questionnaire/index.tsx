@@ -49,7 +49,7 @@ export const Questionnaire = () => {
 
     const onSubmit = values => {
         QuestionFormState.questions.forEach((question) => {
-            if(question.multiSelectionMax != null) {
+            if(question.multiSelectionMax > 0) {
             
             }
         })
@@ -68,8 +68,7 @@ export const Questionnaire = () => {
                 'Content-Type': 'application/json'
             } 
           }).then(res => {
-            console.log(res.data);
-            history.push("/form")
+            if (res.data.result == true) history.push("/form");
           });
     }
 

@@ -4,7 +4,7 @@ import {Link, Router, Switch, useHistory} from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../Store/rootReducer';
-import { TextField, Button, Box } from '@material-ui/core';
+import { TextField, Button, Box, Grid } from '@material-ui/core';
 import { setLogin, ILogin } from '../../../Store/Login/loginSlice';
 import axios from 'axios';
 import { ILoginResponse } from '../../../Interfaces/interface';
@@ -46,15 +46,29 @@ export const LoginPage = () => {
     };
 
     return(
-        <Box>
+        <Box style={{position: "absolute",
+        top: "50%",
+        left: "50%",
+        marginTop: "-50px",
+        marginLeft: "-50px"
+        //width: "100px",
+        //height: "100px"
+    }}
+        >
             <form onSubmit={handleSubmit(onSubmit)}>
-            <TextField
-                name={"key"}
-                inputRef={register({
-                required: "Required",
-                })}
-            ></TextField>
-            <Button type="submit" variant={"outlined"}>Submit</Button>
+            <Grid container direction="column" >
+                <Grid item>
+                    <TextField
+                        name={"key"}
+                        inputRef={register({
+                        required: "Required",
+                        })}
+                    ></TextField>
+                </Grid>
+                <Grid item>
+                    <Button type="submit" variant={"outlined"}>Submit</Button>
+                </Grid>
+            </Grid>
             </form>
         </Box>
     )

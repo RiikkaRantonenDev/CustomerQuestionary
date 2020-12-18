@@ -15,7 +15,7 @@ export const ManagementPage = () => {
     return(
         <React.Fragment>
           <Navigation></Navigation>
-            <Button variant="contained" color="primary" onClick={() =>{ history.push("/form/create");}}>Luo uusi kyselylomake</Button>
+
             <QuestionFormList></QuestionFormList>
 
         </React.Fragment>

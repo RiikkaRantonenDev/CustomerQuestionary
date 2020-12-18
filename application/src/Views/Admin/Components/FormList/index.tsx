@@ -9,13 +9,14 @@ import { useHistory } from 'react-router-dom';
 import { setActiveForm, setAddQuestionnaireForm, setForms } from '../../../../Store/Questions/questionsSlice';
 import axios from 'axios';
 import { QuestionType } from '../../../../Interfaces/interface';
-import { Rowing } from '@material-ui/icons';
+import { Add } from '@material-ui/icons';
 
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: '100%',
+      //width: '100%',
+      margin: '5rem',
     },
     heading: {
       fontSize: theme.typography.pxToRem(15),
@@ -24,8 +25,8 @@ const useStyles = makeStyles((theme: Theme) =>
       fontWeight: "bolder"
     },
     backgroundPaper: {
-      margin: '5rem',
-      padding: '0.5rem 0.5rem 1.5rem 0.5rem'
+
+      //padding: '0.5rem 0.5rem 1.5rem 0.5rem'
     },
     secondaryHeading: {
       fontSize: theme.typography.pxToRem(15),
@@ -81,7 +82,14 @@ export const QuestionFormList = () => {
     return (
       <Box className={classes.root}>
         <Paper className={classes.backgroundPaper}>
-
+        <Button 
+          variant="contained" 
+          style={{width: "100%"}}
+          color="primary" 
+          onClick={() =>{ history.push("/form/create");}}>
+            <Add/>
+            Luo uusi kyselylomake
+        </Button>
         {FormsState.forms.map(form =>         
         <Accordion expanded={expanded === form.questionnaireFormId} onChange={handleChange(form.questionnaireFormId)}>
           <AccordionSummary

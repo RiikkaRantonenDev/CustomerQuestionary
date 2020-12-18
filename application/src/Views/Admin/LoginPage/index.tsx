@@ -23,7 +23,7 @@ export const LoginPage = () => {
     useEffect(() =>{
     }, [loginState.login.key])
 
-    const onSubmit = (values: LoginRequest) =>
+    const onSubmit = async (values: LoginRequest) =>
     { 
             axios({
               method: 'POST',

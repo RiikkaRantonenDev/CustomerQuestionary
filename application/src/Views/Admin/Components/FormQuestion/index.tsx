@@ -6,7 +6,7 @@ import { QuestionForm } from '../AddOrUpdateFormQuestion';
 import { toggle } from '../../../../Store/Toggles/toggleSlice';
 import axios from 'axios';
 import { IForm, IQuestion, QuestionType } from '../../../../Interfaces/interface';
-import { setQuestions, setIsNewQuestion, setAddQuestionComponentProperty, setAddQuestionComponent, clearForm, refreshAddQuestionComponent } from '../../../../Store/Questions/questionsSlice';
+import { setQuestions, setIsNewQuestion, setAddQuestionComponentProperty, setAddQuestionComponent, clearForm, refreshAddQuestionComponent, setEditAnswerOption } from '../../../../Store/Questions/questionsSlice';
 import { useParams } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -67,16 +67,15 @@ export const QuestionList = () => {
     function addAnswerOptions(question: IQuestion) {
       if (question.answerOptions !== null) {
       return( 
-        <>
-        <ul style={{margin: "0"}}>
-        {question.answerOptions.map(answer =>
-           <li>
-             {answer.text}
-          </li>
-          )
-        }
-      </ul>
-      </>
+        <Box>
+          <Grid container direction="column">
+            {question.answerOptions.map(answer =>
+              <Grid item>
+                {answer.text}
+              </Grid>
+            )}
+          </Grid>
+      </Box>
       )}
     }
 
@@ -92,7 +91,6 @@ export const QuestionList = () => {
                     justify="flex-start"
                     alignItems="center"
                 >
-                  {console.log(questionState.questions)}
                   {questionState.questions.map((question) =>  
                 <Grid
                 container
@@ -119,7 +117,9 @@ export const QuestionList = () => {
                     <Box className={classes.paper}>
                     <span className={classes.fieldHeader}>Vastausvaihtoehdot</span>
                     </Box>
+
                     {addAnswerOptions(question)} 
+
                     <Box className={classes.paper}>
                       <Box>
                         <span className={classes.fieldHeader}>Valinnainen vastaus:</span>
@@ -161,6 +161,7 @@ export const QuestionList = () => {
                           dispatch(setIsNewQuestion(false));
                           dispatch(setAddQuestionComponent(question));
                           dispatch(refreshAddQuestionComponent(true));
+                          dispatch(setEditAnswerOption({id: "", text: "", state: false}));
                           }
                           }>Muokkaa</Button></Box>
                         </Grid>

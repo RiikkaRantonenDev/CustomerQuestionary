@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../../Store/rootReducer';
 import {Add, Delete } from '@material-ui/icons'
 import { Box, Radio, TextField, Select, MenuItem, Button, Grid, Icon, FormLabel, Paper, createStyles, makeStyles, Theme, Checkbox } from '@material-ui/core';
-
 import { setAddQuestionComponentProperty, removeAnswerOption, setQuestions, refreshAddQuestionComponent, clearForm, setEditAnswerOption, setAddQuestionComponent, setUpdateAnswerOption, removeAnswerOptions } from '../../../../Store/Questions/questionsSlice';
 import { toggle } from '../../../../Store/Toggles/toggleSlice';
 import axios from 'axios';
@@ -57,7 +56,6 @@ export const QuestionForm = () => {
     }
 
     const onSubmit = (data: QuestionForm) => {
-        console.log(getValues())
         // TODO: lähetetään formin data
         if(QuestionFormState.isNewQuestion){
         axios({
@@ -94,10 +92,10 @@ export const QuestionForm = () => {
 
     // If new question type does not have answer options, remove them
     const removeAllAnswerOptions = (questionTypeId: number) => {
-        if(questionTypeId > 3)
+        if(questionTypeId > 3 && QuestionFormState.addQuestionComponent.answerOptions.length > 0)
         {
             alert("Olet vaihtamassa kysymystä tyypiksi, jolla ei ole vastausvaihtoehtoja. Vastausvaihtoehdot poistetaan. Jatka?");
-            //dispatch(removeAnswerOptions(questionTypeId));
+            dispatch(removeAnswerOptions(questionTypeId));
         }
     }
 
@@ -105,18 +103,19 @@ export const QuestionForm = () => {
         dispatch(setAddQuestionComponentProperty({key: "questionText", value: getValues("questionText")}));
     }
 
-    const handleMinChange = () => {
-
-        dispatch(setAddQuestionComponentProperty({key: "multiSelectionMin", value: parseInt(getValues("multiSelectionMin").toString())}));
+    const handleMinChange = (value : number) => {
+        dispatch(setAddQuestionComponentProperty({key: "multiSelectionMin", value: value}));
+        trigger();
     }
 
-    const handleMaxChange = () => {
-        dispatch(setAddQuestionComponentProperty({key: "multiSelectionMax", value: parseInt(getValues("multiSelectionMax").toString())}));
+    const handleMaxChange = (value : number) => {    
+        dispatch(setAddQuestionComponentProperty({key: "multiSelectionMax", value: value}));
         trigger();
     }
 
     const handleHasAdditionalOption = (checked: boolean) => {
         dispatch(setAddQuestionComponentProperty({key: "hasAdditionalOption", value: checked}));
+        dispatch(setAddQuestionComponentProperty({key: "answerOptions", value: [...QuestionFormState.addQuestionComponent.answerOptions, { text: "additional", id: 99}]}));
     }
 
     const handleRequired = (checked: boolean) => {
@@ -124,8 +123,7 @@ export const QuestionForm = () => {
     }
 
     const saveAnswerOption = () => {
-        //console.log(getValues("answers"));
-        dispatch(setAddQuestionComponentProperty({key: "answerOptions", value: [...QuestionFormState.addQuestionComponent.answerOptions, { text: getValues("answers"), id: QuestionFormState.addQuestionComponent.answerOptions.length}]}));
+        dispatch(setAddQuestionComponentProperty({key: "answerOptions", value: [...QuestionFormState.addQuestionComponent.answerOptions, { text: QuestionFormState.editAnswerOption?.text, id: QuestionFormState.addQuestionComponent.answerOptions.length}]}));
     }
 
     const fetchQuestionData = () => {
@@ -138,11 +136,6 @@ export const QuestionForm = () => {
             if(res.data.questions) dispatch(setQuestions(res.data.questions as IQuestion[]))
         })
       }
-
-      useEffect(() => {
-          console.log("joo");
-        register("multiSelectionMax"); // custom register Antd input
-      }, [register])
 
     useEffect(() => {
         if (QuestionFormState.refreshAddQuestionComponent){
@@ -192,21 +185,25 @@ export const QuestionForm = () => {
                             <MenuItem value={QuestionType.checkbox}>Monivalinta</MenuItem>
                             <MenuItem value={QuestionType.radio}>Radio</MenuItem>
                             <MenuItem value={QuestionType.dropdown}>Alasvetolaatikko</MenuItem>
+                            <MenuItem value={QuestionType.scale}>Skalaari</MenuItem>
                         </Select>
                     </Grid>
                 </Grid>
-                {(QuestionFormState.addQuestionComponent.questionType > 1) ? <></> : 
+
+                {/* Show answerOption if questiontype has answeroptions */}
+                {(QuestionFormState.addQuestionComponent.questionType > 2) ? <></> : 
                 <Grid container direction="column" className={classes.formField}>
                     <Grid item>
                         <FormLabel>Vastausvaihtoehdot</FormLabel>
                     </Grid> 
                     <Grid container direction="column">
-                            {QuestionFormState.addQuestionComponent.answerOptions.map((answerOption) => <AnswerOption id={answerOption.id} text={answerOption.text} state={false} />)}
+                            {QuestionFormState.addQuestionComponent.answerOptions.map((answerOption) =>
+                                answerOption.id != "99" ? <AnswerOption id={answerOption.id} text={answerOption.text} state={false} /> : <></>
+                             )}
                     </Grid>
                     <Grid style={{display: toggleState.answerField ? "block" : "none"}}>
                         <TextField
                             name="answers"
-                            inputRef={register}
                             onChange={(e) => dispatch(setEditAnswerOption({text: e.target.value, id: QuestionFormState.editAnswerOption?.id || "", state: QuestionFormState.editAnswerOption?.state || false}))}
                             value={QuestionFormState.editAnswerOption?.text}
                         />
@@ -222,30 +219,63 @@ export const QuestionForm = () => {
                             }
                             )
                         );
-                        dispatch(setEditAnswerOption({id: "", text: "", state: false}))
+                       // dispatch(setEditAnswerOption({id: "", text: "", state: false}))
                     }
                     }><Add></Add>Lisää uusi vaihtoehto</Button>
                 </Grid>
-
                 }
+
+                {(QuestionFormState.addQuestionComponent.questionType == 5) ? 
+                <Grid container direction="column">
+                    <Grid item>
+                        <FormLabel>Skalaarin koko</FormLabel>
+                    </Grid>
+                    <Grid item>
+                    <TextField 
+                            name="multiSelectionMin" 
+                            id="multiSelectionMin" 
+                            //value={QuestionFormState.addQuestionComponent.multiSelectionMin} 
+                            onChange={(e) => handleMinChange(parseInt(e.target.value))} 
+                            inputRef={register} 
+                            inputProps={{min: "0", value: QuestionFormState.addQuestionComponent.multiSelectionMin}} 
+                            type="number">
+                    </TextField><span> - </span>
+                            <TextField
+                                name="multiSelectionMax1"
+                                id="multiSelectionMax1" 
+                                inputRef={register({ min: {
+                                    value: QuestionFormState.addQuestionComponent.multiSelectionMin,
+                                    message: 'error message' // <p>error message</p>
+                                }})}
+                                error={!!errors.multiSelectionMax?.message}
+                                helperText={errors.multiSelectionMax?.message}
+                                onChange={(e) => handleMaxChange(parseInt(e.target.value))}
+                                //value={QuestionFormState.addQuestionComponent.multiSelectionMax}
+                                inputProps={{value: QuestionFormState.addQuestionComponent.multiSelectionMax}} 
+                                type="number">
+                            </TextField>
+                    </Grid>
+                </Grid>
+                :<></>}
+
                 <Grid item style={{display: (QuestionFormState.addQuestionComponent.questionType == 0) ? "block" : "none"}}>
                     <Grid container direction="column" >
                         <Grid item>
-                        <FormLabel>Minimi</FormLabel>
+                        <FormLabel>Valittava vähintään</FormLabel>
                         </Grid>
                         <Grid item>
                             <TextField 
-                                name="multiSelectionMin" 
-                                id="multiSelectionMin" 
-                                //value={QuestionFormState.addQuestionComponent.multiSelectionMin} 
-                                onChange={handleMinChange} 
-                                inputRef={register} 
-                                inputProps={{min: "0", value: QuestionFormState.addQuestionComponent.multiSelectionMin}} 
-                                type="number">
+                            name="multiSelectionMin" 
+                            id="multiSelectionMin" 
+                            //value={QuestionFormState.addQuestionComponent.multiSelectionMin} 
+                            onChange={(e) => handleMinChange(parseInt(e.target.value))} 
+                            inputRef={register} 
+                            inputProps={{min: "0", value: QuestionFormState.addQuestionComponent.multiSelectionMin}} 
+                            type="number">
                             </TextField>
                         </Grid>
                         <Grid item>
-                        <FormLabel>Maximi</FormLabel>
+                        <FormLabel>Valittava enintään</FormLabel>
                         </Grid>
                         <Grid item>
                             <TextField
@@ -257,7 +287,7 @@ export const QuestionForm = () => {
                                 }})}
                                 error={!!errors.multiSelectionMax?.message}
                                 helperText={errors.multiSelectionMax?.message}
-                                onChange={handleMaxChange}
+                                onChange={(e) => handleMaxChange(parseInt(e.target.value))}
                                 //value={QuestionFormState.addQuestionComponent.multiSelectionMax}
                                 inputProps={{min: "0", value: QuestionFormState.addQuestionComponent.multiSelectionMax}} 
                                 type="number">
@@ -272,7 +302,13 @@ export const QuestionForm = () => {
                     <Checkbox name="required" checked={QuestionFormState.addQuestionComponent.required} value={QuestionFormState.addQuestionComponent.required} onChange={e => {handleRequired(e.target.checked)}}></Checkbox>Pakollinen
                 </Grid>
                 <Grid item>
-                    <Button type="submit" variant="contained" color="primary">Tallenna kysymys</Button>
+                    <Button 
+                    type="submit" 
+                    variant="contained" 
+                    color="primary">
+                        Tallenna kysymys
+                    </Button>
+
                     <Button variant="contained" onClick={() => {dispatch(
                         toggle(
                         {field: "questionList", value: true}

@@ -10,12 +10,17 @@ import { EditForm } from '../Admin/EditForm';
 import { ManagementPage as FormManagement } from '../Admin/FormManagement';
 import { CreateForm } from '../Admin/Components/CreateForm';
 import { Reports } from '../Admin/Raports';
+import { ThemeProvider } from '@material-ui/core';
+import { theme } from './styles';
+
+
 
 export const Base = () => {
     const dispatch = useDispatch();
 
     return (
       <>
+      <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Switch>
           <Route path="/form/create" component={CreateForm}></Route>
@@ -27,7 +32,7 @@ export const Base = () => {
 
         </Switch>
       </BrowserRouter>
-
+      </ThemeProvider>
     </>
     );
     

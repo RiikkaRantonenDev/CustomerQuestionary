@@ -19,7 +19,7 @@ export const QuestionnaireForm = () => {
         }).then(res => {
           dispatch(setActiveForm(
             {questionnaireFormId: params.id as string,
-            questionnaireName: "",questionnaireDescription: ""}
+            questionnaireName: res.data.questionnaireName, questionnaireDescription: res.data.questionnaireDescription}
           ));
           dispatch(setQuestions(res.data.questions as IQuestion[]))
         })

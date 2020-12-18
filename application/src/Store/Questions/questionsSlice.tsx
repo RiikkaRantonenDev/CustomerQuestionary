@@ -38,7 +38,8 @@ const initialState: QuestionFormState = {
        // editDate: new Date()
 },
     forms: [],
-    activeForm: {questionnaireFormId: "00000000-0000-0000-0000-000000000000", questionnaireName: ""}
+    activeForm: {questionnaireFormId: "00000000-0000-0000-0000-000000000000", questionnaireName: ""},
+    //editAnswerOption: {id: "", state: false, text: ""}
 }
 
 const Questions = createSlice({
@@ -107,9 +108,11 @@ const Questions = createSlice({
             state.activeForm = action.payload;
         },
         setEditAnswerOption(state, action: PayloadAction<IAnswerOption>){
+            console.log(action.payload);
             state.editAnswerOption = action.payload;
         },
         setAnswer(state, action: PayloadAction<{value: any; id:string, answerId:string }>){
+            console.log(action.payload.answerId);
             let question = state.questions.find(question => question.questionId == action.payload.id);
             if(question) {
                 question.answerOptions[action.payload.answerId].state = action.payload.value;
@@ -123,6 +126,10 @@ const Questions = createSlice({
         },
         removeAnswerOptions(state, action: PayloadAction<number>){
             state.addQuestionComponent.answerOptions = [];
+        },
+        setWildCard(state, action: PayloadAction<{id: string, value: boolean}>)
+        {
+            
         }
     }
 });

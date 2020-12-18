@@ -1,18 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../Store/rootReducer';
-import { Box, Paper, createStyles, makeStyles, Theme, Grid, Radio, Select, FormControlLabel, RadioGroup, TextField, MenuItem, Checkbox, Button, FormGroup } from '@material-ui/core';
+import { Box, Paper, createStyles, makeStyles, Theme, Grid, Radio, Select, FormControlLabel, RadioGroup, TextField, MenuItem, Checkbox, Button, FormGroup, FormControl, FormLabel, Slider, InputLabel } from '@material-ui/core';
 import { QuestionType, IQuestion, IAnswerOption } from '../../../../Interfaces/interface';
-import { flexbox } from '@material-ui/system';
-import { CheckBox, ErrorSharp } from '@material-ui/icons';
 import { FormProvider, useFieldArray, useForm, useFormContext} from 'react-hook-form';
 import { setAnswer } from '../../../../Store/Questions/questionsSlice';
 import axios from 'axios';
 import { useHistory, useParams } from 'react-router-dom';
-
-interface IAnswerOptionFieldProps {
-    question: IQuestion;
-}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,7 +25,21 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     fieldHeader: {
         fontWeight: "bold"
-    }
+    },
+    backgroundBox: {
+        backgroundColor: "#DEDEDE",
+        margin: "0",
+        height: "100vh"
+    },
+    questionnaireContainer: {
+        width: "70%",
+        margin: "auto",
+        padding: "1rem 1rem 3rem 1rem"
+    },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+      }
   }),
 );
 
@@ -39,24 +47,26 @@ export const Questionnaire = () => {
     const QuestionFormState = useSelector((state: RootState) => state.questionReducer);
     const params: { [paramName: string]: string | number | boolean | undefined  } = useParams();
     const methods = useForm();
-    //const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
-    //    control,
-    //    name: "test", // unique name for your Field Array
-        // keyName: "id", default to "id", you can change the key name
-    //  });
     let history = useHistory();
     const classes = useStyles();
 
     const onSubmit = values => {
         QuestionFormState.questions.forEach((question) => {
+            
+            // Validate max selections
             if(question.multiSelectionMax > 0) {
             
             }
         })
-        var joo = Object.keys(values).map((array) => {
-            return {content: [values[array]], questionId: array}
+        var convertedValue = Object.keys(values).map((key) => {
+            if (!Array.isArray(values[key])) {
+                return {answers: [values[key]], questionGuid: key.toString()}
+            }
+            else {
+                return {answers: values[key].map((value) => value.toString()), questionGuid: key.toString()}
+            }
         })
-        postFormAnswer(joo)
+        postFormAnswer(convertedValue);
     };
 
     const postFormAnswer = (values) => {
@@ -68,17 +78,25 @@ export const Questionnaire = () => {
                 'Content-Type': 'application/json'
             } 
           }).then(res => {
-            if (res.data.result == true) history.push("/form");
+           // if (res.data.result == true) history.push("/form");
           });
     }
 
     return(
         <FormProvider {...methods}>
         
-        <Box display="flex" flexDirection="column" m={1} p={1} justifyContent="center">
+        <Box className={classes.backgroundBox} display="flex" flexDirection="column" m={1} p={1} justifyContent="center">
+            <Paper className={classes.questionnaireContainer}>
             <form onSubmit={methods.handleSubmit(onSubmit)}>
+                <Box>
+                    <Grid container style={{margin: "0 1rem 0 1rem"}}>
+                        <Grid item>
+                            <h2>{QuestionFormState.activeForm.questionnaireName}</h2>
+                        </Grid>
+                    </Grid>
+                </Box>
             {QuestionFormState.questions.map((question) => 
-                <Box width="60%" margin="auto">
+                <Box margin="auto">
                     <Paper className={classes.questionPaper}>
                         <Grid container direction="column">
                             <Grid item style={{borderBottom: "1px solid #DADADA", marginBottom: "0.7rem"}}>
@@ -88,18 +106,18 @@ export const Questionnaire = () => {
                             </Grid>
                             <Grid item>
                                 {GetQuestionByType(question)}
-                                {/* <AnswerOptionField question={question}></AnswerOptionField> */}
                             </Grid>
                         </Grid>
                     </Paper>
                 </Box>)
             }
-            <Grid style={{width: '60%', margin: 'auto'}} container>
-                <Grid item>
-            <Button type="submit" variant="contained">Lähetä</Button>
+            <Grid justify="center" container>
+                <Grid  item>
+                    <Button type="submit" variant="contained">Lähetä</Button>
                 </Grid>
             </Grid>
             </form>
+            </Paper>
         </Box>
 
         </FormProvider>
@@ -112,7 +130,7 @@ const ConnectForm = ({children}) => {
 
     useEffect(() =>{
         QuestionFormState.questions.map((question : IQuestion) => {
-            if (question.answerOptions.length > 0) {
+            if (question.questionType == 0) {
             question.answerOptions.map((answerOption: IAnswerOption) => {
             methods.register({name: question.questionId + "[" + answerOption.id.toString() + "]"});
             })}
@@ -140,20 +158,18 @@ function GetQuestionByType(questionObject: IQuestion) {
         case 2:
             result = SelectOptionField(questionObject)
             break;
+        case 5:
+            result = SliderField(questionObject)
+            break;
     }
 
     return (result);
 }
 
 const CheckBoxOptionField = (questionObject: IQuestion) => {
-    //const QuestionFormState = useSelector((state: RootState) => state.questionReducer);
-    //const index = QuestionFormState.questions.indexOf(questionObject);
     const dispatch = useDispatch();
-//    var questionId = QuestionFormState.questions.findIndex((x : IQuestion) =>  x.questionId == questionObject.questionId);
 
-    //const {register} = useFormContext();
     return (<Box>
-        <label>{questionObject.questionId}</label>
                 {questionObject.answerOptions.map((answerOption : IAnswerOption) =>
                 <ConnectForm>
                       {({register, setValue, errors}) =>  <Grid container direction="row">
@@ -177,17 +193,46 @@ const CheckBoxOptionField = (questionObject: IQuestion) => {
                             </Grid>
                             <Grid item>
                                 <label>{answerOption.text}</label>
-                            </Grid>
+                            </Grid>  
                             </Grid>}
+                            {/* Optional answer field */}
                             </ConnectForm>
                     )}
+                    <ConnectForm>
+                            {({register, setValue, errors}) =>  <Grid container direction="row">
+                            <Grid item>
+                                <Checkbox
+                                    ref={register}
+                                    name={questionObject.questionId + "[optional]"}
+                                    checked={false}
+                                    inputRef={register()}
+                                    //error={!!errors.questionObject.questionId?.message}
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => 
+                                    {
+                                        //setValue(questionObject.questionId + "[" + answerOption.id.toString() + "]", event.target.checked);
+                                        dispatch(setAnswer({value: event.target.checked, id: questionObject.questionId, answerId: "99"}))
+                                    }}></Checkbox>
+                                    <TextField
+                                      //  disabled={questionObject.questionId + "[" + answerOption.id.toString() + "]" + "optional"}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => 
+                                            {
+                                                setValue(questionObject.questionId, event.target.value);
+                                                dispatch(setAnswer({value: event.target.value, id: questionObject.questionId, answerId: "wildCard"}))
+                                            }}
+                                    ></TextField>
+                                    {/*  */}
+                            </Grid>
+                            <Grid item>
+                                <label>Muu, mikä?</label>
+                            </Grid>  
+                            </Grid>}
+                            </ConnectForm>
 
     </Box>);
 }
 
 function TextfieldOptionField(questionObject: IQuestion) {
     return (<Box>
-                <label>{questionObject.questionId}</label>
                 <Box>
                     <Box>
                         <ConnectForm>
@@ -199,7 +244,6 @@ function TextfieldOptionField(questionObject: IQuestion) {
                                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => 
                                     {
                                         setValue(questionObject.questionId, event.target.value);
-                                        //dispatch(setAnswer({value: event.target.checked, id: questionObject.questionId, answerId: answerOption.id}))
                                     }}
                             ></TextField>}
                         </ConnectForm>
@@ -210,74 +254,84 @@ function TextfieldOptionField(questionObject: IQuestion) {
 
 function RadioOptionField(questionObject: IQuestion) {
     return (<Box>
-                <label>{questionObject.questionId}</label>
-    </Box>);
-}
-
-function SelectOptionField(questionObject: IQuestion) {
-    return (<Box>
-                <label>{questionObject.questionId}</label>
-    </Box>);
-}
-
-/*const AnswerOptionField = (props: IAnswerOptionFieldProps) => {
-    const dispatch = useDispatch();
-    //const {register, setValue} = useFormContext();
-    const QuestionFormState = useSelector((state: RootState) => state.questionReducer);
-
-    return(
-        <>
-            {props.question.questionType == 0 ? 
-            props.fields.map((field, index) => (
-            <Grid>
-                <FormGroup>
-
-                    {props.question.hasAdditionalOption ?
-                    <Grid container>
-                    <Grid>
-                        <Checkbox inputRef={props.reg.register}></Checkbox> 
-                    </Grid>
-                    <Grid item>
-                        <label>Muu</label>
-                        <TextField inputRef={props.reg.register}></TextField>
-                    </Grid>
-                        </Grid> : ""}
-                        
-                    
-                    </FormGroup>
-            </Grid>)) : <></>}
-            {props.question.questionType == 3 ? 
-            <Box>
-                    <Box>
-                        <TextField inputRef={props.reg.register} name={"[" + props.question.questionId + "]"}></TextField>
-                    </Box>
-                </Box> : <></>}
-            {props.question.questionType == 1 ? 
-            <Grid container>
-                    <RadioGroup name={"[" + props.question.questionId + "]"}>
-                        {props.question.answerOptions.map(answerOption =>
-                        <Grid item>
-                            <Grid container>
-                                <Grid item>
-                                    <Radio
-                                        inputRef={props.reg.register}
-                                        value={answerOption.text}></Radio>
-                                </Grid>
-                                <Grid item>
-                                    <label>{answerOption.text}</label>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                            )}
-                    </RadioGroup>
-                </Grid> : <></>}
-            {props.question.questionType == 2 ? 
-            <>
-                <Select inputRef={props.reg.register}>
-                    {props.question.answerOptions.map(answerOption =>
-                        <MenuItem value={props.question.questionId + "-" + answerOption.id}>{answerOption.text}</MenuItem>
+                <ConnectForm>
+                {({register, setValue, errors, getValues}) =>                 
+                        <RadioGroup 
+                            aria-label="gender"
+                            name={questionObject.questionId}
+                            ref={register} 
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => 
+                                {
+                                    setValue(questionObject.questionId, event.target.value);
+                                    //dispatch(setAnswer({value: event.target.checked, id: questionObject.questionId, answerId: answerOption.id}))
+                                }}>
+                                                            {questionObject.answerOptions.map((answerOption, key) =>
+                            <FormControlLabel key={key} value={answerOption.text} control={<Radio />} label={answerOption.text} />
                         )}
-                </Select></> : <></>}
-        </>
+                        </RadioGroup>
+                     }
+                </ConnectForm>
+    </Box>);
+}
+
+const SelectOptionField = (questionObject: IQuestion) => {
+    //const classes = useStyles();
+    
+    return (<Box>
+                <ConnectForm>
+                    {({register, setValue, errors, getValues}) =>    
+                    <>          
+                    <FormControl>
+                        <InputLabel id={`selectLabel-${questionObject.questionId}`}>
+                                Valitse...
+                        </InputLabel>   
+                        <Select 
+                            labelId={`selectLabel-${questionObject.questionId}`}
+                            inputRef={register}
+                            name={questionObject.questionId}
+                            onChange={(event: React.ChangeEvent<{ value: unknown }>) => 
+                                {
+                                    setValue(questionObject.questionId, event.target.value);
+                                }}
+                            >
+                            {questionObject.answerOptions.map((answerOption, key) =>
+                                <MenuItem key={key} value={answerOption.text}>{answerOption.text}</MenuItem>
+                            )}
+                        </Select>
+                     </FormControl>
+                     </>}
+                </ConnectForm>
+    </Box>);
+}
+
+function SliderField(questionObject: IQuestion) {
+    return (<Box>
+                <ConnectForm>
+                    {({register, setValue, errors, getValues}) =>                 
+                    <Slider
+                    defaultValue={0}
+                    ref={register}
+                    step={1}
+                    marks
+                    onChange={(event: any, newValue: number | number[])  => 
+                    {
+                        setValue(questionObject.questionId, (newValue as number).toString());
+                        
+                    }}
+                    min={questionObject.multiSelectionMin}
+                    max={questionObject.multiSelectionMax}
+                    valueLabelDisplay="auto"
+                  />
+                     }
+                </ConnectForm>
+    </Box>);
+}
+
+const WildCard = (questionObject : IQuestion) => {
+    return (
+        <Box>
+            <span>Muu, mikä?</span>
+            <TextField></TextField>
+        </Box>
     )
-}*/
+} 

@@ -7,6 +7,7 @@ import { FormProvider, useFieldArray, useForm, useFormContext} from 'react-hook-
 import { setAnswer } from '../../../../Store/Questions/questionsSlice';
 import axios from 'axios';
 import { useHistory, useParams } from 'react-router-dom';
+import { QuestionForm } from '../../../Admin/Components/AddOrUpdateFormQuestion';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,6 +52,7 @@ export const Questionnaire = () => {
     const classes = useStyles();
 
     const onSubmit = values => {
+        console.log(values);
         QuestionFormState.questions.forEach((question) => {
             
             // Validate max selections
@@ -59,13 +61,15 @@ export const Questionnaire = () => {
             }
         })
         var convertedValue = Object.keys(values).map((key) => {
+            // If not array...
             if (!Array.isArray(values[key])) {
                 return {answers: [values[key]], questionGuid: key.toString()}
             }
             else {
-                return {answers: values[key].map((value) => value.toString()), questionGuid: key.toString()}
+                return {answers: values[key].map((value) => value.toString()), questionGuid: key.toString(), optionalAnswer: values[key].optional}
             }
         })
+        console.log(convertedValue);
         postFormAnswer(convertedValue);
     };
 
@@ -168,17 +172,21 @@ function GetQuestionByType(questionObject: IQuestion) {
 
 const CheckBoxOptionField = (questionObject: IQuestion) => {
     const dispatch = useDispatch();
+    //const QuestionFormState = useSelector((state: RootState) => state.questionReducer);
+    //const index = QuestionFormState.questions.findIndex(question => question.questionId == questionObject.questionId);
 
     return (<Box>
                 {questionObject.answerOptions.map((answerOption : IAnswerOption) =>
+                       
                 <ConnectForm>
+                    
                       {({register, setValue, errors}) =>  <Grid container direction="row">
                             <Grid item>
                                 <Checkbox
-                                    ref={register}
                                     //key={field.id}ods.register({name: question.questionId + "[" + answerOption.id.toString() + "]"})
                                     name={questionObject.questionId + "[" + answerOption.id.toString() + "]"}
-                                    checked={answerOption.state}
+                                    //checked={QuestionFormState.questions[index].answerOptions[answerOption.id].state}
+                                   //checked={answerOption.state}
                                     inputRef={register()}
                                     //error={!!errors.questionObject.questionId?.message}
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => 
@@ -198,26 +206,29 @@ const CheckBoxOptionField = (questionObject: IQuestion) => {
                             {/* Optional answer field */}
                             </ConnectForm>
                     )}
+                    {questionObject.hasAdditionalOption ?
                     <ConnectForm>
-                            {({register, setValue, errors}) =>  <Grid container direction="row">
+                            {({register, setValue, errors, getValues}) =>  <Grid container direction="row">
                             <Grid item>
-                                <Checkbox
+                                {/* <Checkbox
                                     ref={register}
                                     name={questionObject.questionId + "[optional]"}
-                                    checked={false}
+                                    //checked={false}
                                     inputRef={register()}
                                     //error={!!errors.questionObject.questionId?.message}
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => 
                                     {
                                         //setValue(questionObject.questionId + "[" + answerOption.id.toString() + "]", event.target.checked);
-                                        dispatch(setAnswer({value: event.target.checked, id: questionObject.questionId, answerId: "99"}))
-                                    }}></Checkbox>
+                                    //    dispatch(setAnswer({value: event.target.checked, id: questionObject.questionId, answerId: questionObject.answerOptions.length.toString()}))
+                                    }}></Checkbox> */}
                                     <TextField
                                       //  disabled={questionObject.questionId + "[" + answerOption.id.toString() + "]" + "optional"}
+                                        name={questionObject.questionId + "[optional]"}
+                                        inputRef={register()}
                                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => 
                                             {
-                                                setValue(questionObject.questionId, event.target.value);
-                                                dispatch(setAnswer({value: event.target.value, id: questionObject.questionId, answerId: "wildCard"}))
+                                                setValue(questionObject.questionId + "[optional]", event.target.value);
+                                               // dispatch(setAnswer({value: event.target.value, id: questionObject.questionId, answerId: questionObject.answerOptions.length.toString()}))
                                             }}
                                     ></TextField>
                                     {/*  */}
@@ -226,7 +237,7 @@ const CheckBoxOptionField = (questionObject: IQuestion) => {
                                 <label>Muu, mikä?</label>
                             </Grid>  
                             </Grid>}
-                            </ConnectForm>
+                            </ConnectForm> : <></>}
 
     </Box>);
 }

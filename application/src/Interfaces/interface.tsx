@@ -41,6 +41,20 @@ export interface IForm {
   questions?: IQuestion[];
 }
 
+export interface IReport {
+  id: number;
+  customerId: number;
+  customerAnswerDTOs: ICustomerAnswer[];
+}
+
+export interface ICustomerAnswer {
+  questionGuid: string;
+  questionText: string;
+  multiSelectionContent?: string[];
+  content: string;
+  selection?: any;
+}
+
 /*public class FormAnswer
 {
     public ObjectId _id { get; set; }

@@ -4,7 +4,7 @@ import {Link, Router, Switch, useHistory} from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../Store/rootReducer';
-import { TextField, Button, Box, Grid } from '@material-ui/core';
+import { TextField, Button, Box, Grid, Paper } from '@material-ui/core';
 import { setLogin, ILogin } from '../../../Store/Login/loginSlice';
 import axios from 'axios';
 import { ILoginResponse } from '../../../Interfaces/interface';
@@ -33,7 +33,6 @@ export const LoginPage = () => {
               data:values
             }).then(res => {
                 console.log(res);
-                const joo = res.data as ILoginResponse;
                 if (res.data.result) 
                 {
                     dispatch(setLogin({key: values.key}));
@@ -46,17 +45,17 @@ export const LoginPage = () => {
     };
 
     return(
-        <Box style={{position: "absolute",
+        <Box>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <Paper style={{position: "absolute",
         top: "50%",
         left: "50%",
         marginTop: "-50px",
         marginLeft: "-50px"
         //width: "100px",
         //height: "100px"
-    }}
-        >
-            <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container direction="column" >
+    }}>
+            <Grid container direction="column">
                 <Grid item>
                     <TextField
                         name={"key"}
@@ -66,9 +65,10 @@ export const LoginPage = () => {
                     ></TextField>
                 </Grid>
                 <Grid item>
-                    <Button type="submit" variant={"outlined"}>Submit</Button>
+                    <Button color="primary" variant="contained" style={{width: "100%", marginTop: "1rem", marginBottom: "1rem"}} type="submit">Kirjaudu</Button>
                 </Grid>
             </Grid>
+            </Paper>
             </form>
         </Box>
     )

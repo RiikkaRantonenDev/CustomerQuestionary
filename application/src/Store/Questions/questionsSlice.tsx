@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import { IAnswerOption, IForm, IQuestion, QuestionType } from '../../Interfaces/interface';
+import { IAnswerOption, IForm, IQuestion, IReport, QuestionType } from '../../Interfaces/interface';
 
 export interface QuestionFormState {
     // lisää tähän kaikki steitit joita tämä store tarjoaa, nämä käyttävät interfaceja tyyppeinä
@@ -12,6 +12,7 @@ export interface QuestionFormState {
     activeForm: IForm;
     answers?: IQuestion[];
     editAnswerOption?: IAnswerOption;
+    questionnaireReport?: IReport[];
 }
 
 const initialState: QuestionFormState = {
@@ -40,6 +41,7 @@ const initialState: QuestionFormState = {
     forms: [],
     activeForm: {questionnaireFormId: "00000000-0000-0000-0000-000000000000", questionnaireName: ""},
     //editAnswerOption: {id: "", state: false, text: ""}
+    questionnaireReport: []
 }
 
 const Questions = createSlice({
@@ -62,6 +64,7 @@ const Questions = createSlice({
         {
             const payload = action.payload;
             state.questions = payload;
+            console.log(state.questions);
         },
         setForms(state, action: PayloadAction<IForm[]>)
         {
@@ -112,9 +115,13 @@ const Questions = createSlice({
             state.editAnswerOption = action.payload;
         },
         setAnswer(state, action: PayloadAction<{value: any; id:string, answerId:string }>){
+            console.log(action.payload.id);
             console.log(action.payload.answerId);
+            console.log(action.payload.value);
             let question = state.questions.find(question => question.questionId == action.payload.id);
+
             if(question) {
+                console.log(question);
                 question.answerOptions[action.payload.answerId].state = action.payload.value;
             }
         },
@@ -130,6 +137,9 @@ const Questions = createSlice({
         setWildCard(state, action: PayloadAction<{id: string, value: boolean}>)
         {
             
+        },
+        setQuestionnaireReport(state, action: PayloadAction<IReport[]>){
+            state.questionnaireReport = action.payload;
         }
     }
 });
@@ -150,7 +160,8 @@ export const {
     setAnswer,
     setEditAnswerOption,
     setUpdateAnswerOption,
-    removeAnswerOptions
+    removeAnswerOptions,
+    setQuestionnaireReport
 } = Questions.actions;
 
 export default Questions.reducer;

@@ -9,11 +9,6 @@ import { setQuestionnaireFormProperty } from '../../../../Store/Questions/questi
 import { useHistory } from 'react-router-dom';
 import { Navigation } from '../Navigation';
 
-
-const postNewForm = (values: IForm) => {
-
-}
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -40,7 +35,6 @@ export const CreateForm = () => {
     const dispatch = useDispatch();
     const styles = useStyles();
     let history = useHistory();
-    //const classes = useStyles();
 
     const handleFormData = (attr: string) => {
         dispatch(setQuestionnaireFormProperty({key: attr, value: [getValues(attr)]}));
@@ -64,21 +58,30 @@ export const CreateForm = () => {
                 <Paper className={styles.backgroundPaper}>
                     <Grid container direction="column">
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <Grid item>
-                            <label>Lomakkeen nimi</label>
+                        <Grid container>
+                            <Grid item>
+                                <label>Lomakkeen nimi</label>
+                            </Grid>
+                            <Grid item>
                             <TextField
-                             inputRef={register} 
-                             onChange={() => handleFormData("questionnaireName")}name="questionnaireName"></TextField>
+                                inputRef={register} 
+                                onChange={() => handleFormData("questionnaireName")}name="questionnaireName"></TextField>
+                            </Grid>
+                        </Grid>
+                        <Grid container>
+                            <Grid item>
+                                <label>Lomakkeen kuvaus</label>
+                            </Grid>
+                            <Grid item>
+                                <TextField 
+                                    inputRef={register}
+                                    onChange={() => handleFormData("questionnaireDescription")}name="questionnaireDescription"
+                                ></TextField>
+                            </Grid>
+
                         </Grid>
                         <Grid item>
-                            <label>Lomakkeen kuvaus</label>
-                            <TextField 
-                            inputRef={register}
-                            onChange={() => handleFormData("questionnaireDescription")}name="questionnaireDescription"
-                            ></TextField>
-                        </Grid>
-                        <Grid item>
-                            <Button type="submit">Tallenna</Button>
+                                <Button type="submit">Tallenna</Button>
                         </Grid>
                     </form>
                     </Grid>

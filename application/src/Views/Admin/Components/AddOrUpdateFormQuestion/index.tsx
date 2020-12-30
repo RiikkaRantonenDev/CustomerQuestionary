@@ -115,7 +115,7 @@ export const QuestionForm = () => {
 
     const handleHasAdditionalOption = (checked: boolean) => {
         dispatch(setAddQuestionComponentProperty({key: "hasAdditionalOption", value: checked}));
-        dispatch(setAddQuestionComponentProperty({key: "answerOptions", value: [...QuestionFormState.addQuestionComponent.answerOptions, { text: "additional", id: 99}]}));
+        //dispatch(setAddQuestionComponentProperty({key: "answerOptions", value: [...QuestionFormState.addQuestionComponent.answerOptions, { text: "additional", id: 99}]}));
     }
 
     const handleRequired = (checked: boolean) => {
@@ -197,8 +197,8 @@ export const QuestionForm = () => {
                         <FormLabel>Vastausvaihtoehdot</FormLabel>
                     </Grid> 
                     <Grid container direction="column">
-                            {QuestionFormState.addQuestionComponent.answerOptions.map((answerOption) =>
-                                answerOption.id != "99" ? <AnswerOption id={answerOption.id} text={answerOption.text} state={false} /> : <></>
+                            {QuestionFormState.addQuestionComponent.answerOptions.map((answerOption, index) =>
+                                answerOption.id != QuestionFormState.addQuestionComponent.answerOptions.length.toString() ? <AnswerOption id={answerOption.id} text={answerOption.text} state={false} /> : <></>
                              )}
                     </Grid>
                     <Grid style={{display: toggleState.answerField ? "block" : "none"}}>
@@ -296,7 +296,10 @@ export const QuestionForm = () => {
                     </Grid>
                 </Grid>
                 <Grid item>
-                    <Checkbox name="hasAdditionalOption" checked={QuestionFormState.addQuestionComponent.hasAdditionalOption} value={QuestionFormState.addQuestionComponent.hasAdditionalOption} onChange={e => {handleHasAdditionalOption(e.target.checked)}}></Checkbox>Valinnainen vastaus
+                    <Checkbox 
+                        name="hasAdditionalOption" 
+                        checked={QuestionFormState.addQuestionComponent.hasAdditionalOption} value={QuestionFormState.addQuestionComponent.hasAdditionalOption} 
+                        onChange={e => {handleHasAdditionalOption(e.target.checked)}}></Checkbox>Valinnainen vastaus
                 </Grid>
                 <Grid item>
                     <Checkbox name="required" checked={QuestionFormState.addQuestionComponent.required} value={QuestionFormState.addQuestionComponent.required} onChange={e => {handleRequired(e.target.checked)}}></Checkbox>Pakollinen

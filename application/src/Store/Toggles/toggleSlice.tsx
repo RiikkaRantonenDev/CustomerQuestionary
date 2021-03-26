@@ -2,7 +2,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 interface IDialogs {
     field: 
-    | "dialog1" | "answerField" | "questionList" | "showMultiSelectRangeComponent" | "editAnswerOptionTextField";
+    | "dialog1" | "answerField" | "questionList" | "showMultiSelectRangeComponent" | "editAnswerOptionTextField" | "createForm";
     value: boolean;
 }
 
@@ -13,6 +13,7 @@ interface IToggleState {
     questionList;
     showMultiSelectRangeComponent: boolean;
     editAnswerOptionTextField: boolean;
+    createForm: boolean;
 }
 
 const initialState: IToggleState = {
@@ -21,7 +22,8 @@ const initialState: IToggleState = {
     answerField: false,
     questionList: true,
     showMultiSelectRangeComponent: false,
-    editAnswerOptionTextField: false
+    editAnswerOptionTextField: false,
+    createForm: false
 }
 
 const Toggle = createSlice({

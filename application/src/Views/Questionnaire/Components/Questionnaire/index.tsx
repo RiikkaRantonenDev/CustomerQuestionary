@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../Store/rootReducer';
-import { Box, Paper, createStyles, makeStyles, Theme, Grid, Radio, Select, FormControlLabel, RadioGroup, TextField, MenuItem, Checkbox, Button, FormGroup, FormControl, FormLabel, Slider, InputLabel } from '@material-ui/core';
+import { Box, Paper, createStyles, makeStyles, Theme, Grid, Radio, Select, FormControlLabel, RadioGroup, TextField, MenuItem, Checkbox, Button, FormGroup, FormControl, FormLabel, Slider, InputLabel, TextareaAutosize } from '@material-ui/core';
 import { QuestionType, IQuestion, IAnswerOption } from '../../../../Interfaces/interface';
 import { FormProvider, useFieldArray, useForm, useFormContext} from 'react-hook-form';
 import { setAnswer } from '../../../../Store/Questions/questionsSlice';
@@ -154,7 +154,7 @@ function GetQuestionByType(questionObject: IQuestion) {
             result = CheckBoxOptionField(questionObject)
             break;
         case 3:
-            result = TextfieldOptionField(questionObject)
+            result = TextfieldOptionField(questionObject, false)
             break;
         case 1:
             result = RadioOptionField(questionObject)
@@ -165,6 +165,9 @@ function GetQuestionByType(questionObject: IQuestion) {
         case 5:
             result = SliderField(questionObject)
             break;
+        case 4:
+            result = TextfieldOptionField(questionObject, true)
+        break;
     }
 
     return (result);
@@ -209,6 +212,10 @@ const CheckBoxOptionField = (questionObject: IQuestion) => {
                     {questionObject.hasAdditionalOption ?
                     <ConnectForm>
                             {({register, setValue, errors, getValues}) =>  <Grid container direction="row">
+                                <Grid container direction="column">
+                            <Grid item>
+                                <label>Muu, mikä?</label>
+                            </Grid>  
                             <Grid item>
                                 {/* <Checkbox
                                     ref={register}
@@ -233,16 +240,14 @@ const CheckBoxOptionField = (questionObject: IQuestion) => {
                                     ></TextField>
                                     {/*  */}
                             </Grid>
-                            <Grid item>
-                                <label>Muu, mikä?</label>
-                            </Grid>  
+                            </Grid>
                             </Grid>}
                             </ConnectForm> : <></>}
 
     </Box>);
 }
 
-function TextfieldOptionField(questionObject: IQuestion) {
+function TextfieldOptionField(questionObject: IQuestion, multilineStatus: boolean) {
     return (<Box>
                 <Box>
                     <Box>
@@ -251,6 +256,8 @@ function TextfieldOptionField(questionObject: IQuestion) {
                                 inputRef={register({required: {value: questionObject.required, message: "Pakollinen" }})}
                                 error={questionObject.questionId in errors}
                                 name={questionObject.questionId}
+                                placeholder={multilineStatus ? "Laajenna tekstiä Enter -painikkeella" : "Syötä vastaus..."}
+                                multiline={multilineStatus}
                                 helperText={questionObject.questionId in errors ? errors[questionObject.questionId].message : ""}
                                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => 
                                     {
@@ -262,6 +269,7 @@ function TextfieldOptionField(questionObject: IQuestion) {
                 </Box>
     </Box>);
 }
+
 
 function RadioOptionField(questionObject: IQuestion) {
     return (<Box>
@@ -276,9 +284,9 @@ function RadioOptionField(questionObject: IQuestion) {
                                     setValue(questionObject.questionId, event.target.value);
                                     //dispatch(setAnswer({value: event.target.checked, id: questionObject.questionId, answerId: answerOption.id}))
                                 }}>
-                                                            {questionObject.answerOptions.map((answerOption, key) =>
-                            <FormControlLabel key={key} value={answerOption.text} control={<Radio />} label={answerOption.text} />
-                        )}
+                            {questionObject.answerOptions.map((answerOption, key) =>
+                                <FormControlLabel key={key} value={answerOption.text} control={<Radio />} label={answerOption.text} />
+                            )}
                         </RadioGroup>
                      }
                 </ConnectForm>

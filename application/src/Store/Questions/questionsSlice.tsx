@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import { IAnswerOption, IForm, IQuestion, IReport, QuestionType } from '../../Interfaces/interface';
+import { IAnswerOption, IForm, IQuestion, IReport, IReportSummary, QuestionType } from '../../Interfaces/interface';
 
 export interface QuestionFormState {
     // lisää tähän kaikki steitit joita tämä store tarjoaa, nämä käyttävät interfaceja tyyppeinä
@@ -13,6 +13,7 @@ export interface QuestionFormState {
     answers?: IQuestion[];
     editAnswerOption?: IAnswerOption;
     questionnaireReport?: IReport[];
+    questionnaireReportSummary?: IReportSummary[];
 }
 
 const initialState: QuestionFormState = {
@@ -41,7 +42,8 @@ const initialState: QuestionFormState = {
     forms: [],
     activeForm: {questionnaireFormId: "00000000-0000-0000-0000-000000000000", questionnaireName: ""},
     //editAnswerOption: {id: "", state: false, text: ""}
-    questionnaireReport: []
+    questionnaireReport: [],
+    questionnaireReportSummary: []
 }
 
 const Questions = createSlice({
@@ -140,6 +142,9 @@ const Questions = createSlice({
         },
         setQuestionnaireReport(state, action: PayloadAction<IReport[]>){
             state.questionnaireReport = action.payload;
+        },
+        setQuestionnaireReportSummary(state, action: PayloadAction<IReportSummary[]>){
+            state.questionnaireReportSummary = action.payload;
         }
     }
 });
@@ -161,7 +166,8 @@ export const {
     setEditAnswerOption,
     setUpdateAnswerOption,
     removeAnswerOptions,
-    setQuestionnaireReport
+    setQuestionnaireReport,
+    setQuestionnaireReportSummary
 } = Questions.actions;
 
 export default Questions.reducer;

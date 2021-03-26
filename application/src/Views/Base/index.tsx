@@ -10,17 +10,40 @@ import { EditForm } from '../Admin/EditForm';
 import { ManagementPage as FormManagement } from '../Admin/FormManagement';
 import { CreateForm } from '../Admin/Components/CreateForm';
 import { Reports } from '../Admin/Raports';
-import { ThemeProvider } from '@material-ui/core';
+import { AppBar, Button, createStyles, IconButton, makeStyles, Theme, ThemeProvider, Toolbar, Typography } from '@material-ui/core';
 import { theme } from './styles';
 
-
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+    },
+    title: {
+      flexGrow: 1,
+    },
+  }),
+);
 
 export const Base = () => {
+  const classes = useStyles();
     const dispatch = useDispatch();
 
     return (
       <>
       <ThemeProvider theme={theme}>
+      <AppBar position="static">
+  <Toolbar>
+    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+    </IconButton>
+    <Typography variant="h6" className={classes.title}>
+      News
+    </Typography>
+    <Button color="inherit">Login</Button>
+  </Toolbar>
+</AppBar>
       <BrowserRouter>
         <Switch>
           <Route path="/form/create" component={CreateForm}></Route>

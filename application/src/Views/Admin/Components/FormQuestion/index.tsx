@@ -20,8 +20,8 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.secondary,
     },
     backgroundPaper: {
-        margin: '5rem',
-        padding: '0.5rem 0.5rem 1.5rem 0.5rem'
+        margin: 'auto',
+        padding: '1rem'
     },
     fieldHeader: {
         fontWeight: "bold"
@@ -43,13 +43,12 @@ export const QuestionList = () => {
       }
     }, [params])
 
-    const fetchQuestionData = (id : string) => {
+    const fetchQuestionData = (formId : string) => {
       axios({
         method: 'GET',
         //headers: [{key: loginInfo.login.key}],
-        url: "https://localhost:44385/questions/" + id
+        url: "https://localhost:44385/questions/" + formId
       }).then(res => {
-        console.log(res.data);
         if(res.data.questions) dispatch(setQuestions(res.data.questions as IQuestion[]))
       })
     }
@@ -91,15 +90,16 @@ export const QuestionList = () => {
                     justify="flex-start"
                     alignItems="center"
                 >
-                  {questionState.questions.map((question) =>  
-                <Grid
-                container
-                direction="column"
-                justify="flex-start"
-                //alignItems="center"
-                style={{borderBottom: "1px solid gray", padding: "1rem"}}
-                xs={12}
-                >
+                  {questionState.questions.length > 0 ? 
+                  questionState.questions.map((question) =>  
+                  <Grid
+                  container
+                  direction="column"
+                  justify="flex-start"
+                  //alignItems="center"
+                  //style={{borderBottom: "1px solid gray", padding: "1rem"}}
+                  xs={12}
+                  >
                   <Grid item xs={12}>
                     <Box className={classes.paper}>
                       <Box>
@@ -165,12 +165,13 @@ export const QuestionList = () => {
                           }
                           }>Muokkaa</Button></Box>
                         </Grid>
-            </Grid>
-                  </Grid>
+                      </Grid>
+                    </Grid>
                   
                 </Grid>
                   )
-                  }
+                  
+                : <span>Listalla ei ole vielä yhtäkään kysymystä. Aloita lisäämällä kysymyksiä Lisää kysymys -painikkeesta!</span>}
                 </Grid>
                 
             </Paper>

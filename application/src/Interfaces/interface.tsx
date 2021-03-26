@@ -47,14 +47,23 @@ export interface IReport {
   customerAnswerDTOs: ICustomerAnswer[];
 }
 
+export interface IReportSummary {
+  responses: string[];
+}
+
 export interface ICustomerAnswer {
   questionGuid: string;
   questionText: string;
-  multiSelectionContent?: string[];
+  multiSelectionContent?: ISelection[];
   content: string;
   selection?: any;
 }
 
+interface ISelection {
+  selectionId: number;
+  optionText: string;
+  isSelected: boolean;
+}
 /*public class FormAnswer
 {
     public ObjectId _id { get; set; }

@@ -132,7 +132,6 @@ export const QuestionForm = () => {
           //headers: [{key: loginInfo.login.key}],
           url: "https://localhost:44385/questions/" + params.id
         }).then(res => {
-            console.log(res.data);
             if(res.data.questions) dispatch(setQuestions(res.data.questions as IQuestion[]))
         })
       }

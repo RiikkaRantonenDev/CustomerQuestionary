@@ -10,6 +10,7 @@ import { setActiveForm, setAddQuestionnaireForm, setForms } from '../../../../St
 import axios from 'axios';
 import { QuestionType } from '../../../../Interfaces/interface';
 import { Add } from '@material-ui/icons';
+import { CreateForm } from '../CreateForm';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -86,10 +87,16 @@ export const QuestionFormList = () => {
           variant="contained" 
           style={{width: "100%"}}
           color="primary" 
-          onClick={() =>{ history.push("/form/create");}}>
+          onClick={() => dispatch(toggle(
+            {
+              field : "createForm",
+              value: true
+            }
+          ))}>
             <Add/>
             Luo uusi kyselylomake
         </Button>
+        <CreateForm></CreateForm>
         {FormsState.forms.map(form =>         
         <Accordion expanded={expanded === form.questionnaireFormId} onChange={handleChange(form.questionnaireFormId)}>
           <AccordionSummary
@@ -133,8 +140,8 @@ export const QuestionFormList = () => {
                 dispatch(setActiveForm(form));
                 history.push("/form/edit/" + form.questionnaireFormId);}}>Muokkaa</Button>
               <Button onClick={() => history.push("/form/view/" + form.questionnaireFormId)}>Esikatsele</Button>
-              <Button onClick={() => deleteQuestionnaireForm(form.questionnaireFormId)}>Poista</Button>
               <Button onClick={() => history.push("/form/reports/" + form.questionnaireFormId)}>Tulokset</Button>
+              <Button onClick={() => deleteQuestionnaireForm(form.questionnaireFormId)}>Poista</Button>
             </Typography>
           </AccordionDetails>
         </Accordion>)}

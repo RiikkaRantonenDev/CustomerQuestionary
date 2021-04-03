@@ -61,7 +61,7 @@ export const CreateForm = () => {
         // Post created form. Returns bool result and formGuid.
         axios({
             method: 'POST',
-            url: "https://localhost:44385/questionnaireForm",
+            url: "https://project.sprantonen.com/questionnaireForm",
             data: values
           }).then(res => {
             history.push("/form/edit/" + res.data.formGuid);

@@ -35,23 +35,24 @@ export const Base = () => {
       <>
       <ThemeProvider theme={theme}>
       <AppBar position="static">
-  <Toolbar>
-    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-    </IconButton>
-    <Typography variant="h6" className={classes.title}>
-      News
-    </Typography>
-    <Button color="inherit">Login</Button>
-  </Toolbar>
-</AppBar>
+        <Toolbar>
+          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          </IconButton>
+          <Typography variant="h6" className={classes.title}>
+            News
+          </Typography>
+          <Button color="inherit">Login</Button>
+        </Toolbar>
+      </AppBar>
       <BrowserRouter>
         <Switch>
           <Route path="/form/create" component={CreateForm}></Route>
-          <Route path="/login" component={LoginPage}></Route>
+          <Route path="/loginpage" component={LoginPage}></Route>
           <Route path="/form/management" component={FormManagement}></Route>
           <Route path="/form/edit/:id" component={EditForm}></Route>
           <Route path="/form/view/:id" component={QuestionnaireForm}></Route>
           <Route path="/form/reports/:id" component={Reports}></Route>
+          {/* <Route path="/reports/charts" component={Charts}></Route> */}
 
         </Switch>
       </BrowserRouter>

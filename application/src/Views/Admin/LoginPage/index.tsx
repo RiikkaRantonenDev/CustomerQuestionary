@@ -29,7 +29,7 @@ export const LoginPage = () => {
               method: 'POST',
               //headers: {    'Content-Type': 'text/plain'},
               
-              url: 'https://localhost:44385/login',
+              url: 'https://project.sprantonen.com/login',
               data:values
             }).then(res => {
                 console.log(res);

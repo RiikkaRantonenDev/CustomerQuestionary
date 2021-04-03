@@ -60,7 +60,7 @@ export const QuestionForm = () => {
         if(QuestionFormState.isNewQuestion){
         axios({
             method: 'POST',
-            url: "https://localhost:44385/questions/" + params.id,
+            url: "https://project.sprantonen.com/questions/" + params.id,
             data: QuestionFormState.addQuestionComponent
           }).then(res => {
             fetchQuestionData();
@@ -71,7 +71,7 @@ export const QuestionForm = () => {
       else {
         axios({
             method: 'PUT',
-            url: "https://localhost:44385/questions/"  + params.id + "/" + QuestionFormState.addQuestionComponent.questionId,
+            url: "https://project.sprantonen.com/questions/"  + params.id + "/" + QuestionFormState.addQuestionComponent.questionId,
             data: QuestionFormState.addQuestionComponent
           }).then(res => {
             fetchQuestionData();
@@ -130,7 +130,7 @@ export const QuestionForm = () => {
         axios({
           method: 'GET',
           //headers: [{key: loginInfo.login.key}],
-          url: "https://localhost:44385/questions/" + params.id
+          url: "https://project.sprantonen.com/questions/" + params.id
         }).then(res => {
             if(res.data.questions) dispatch(setQuestions(res.data.questions as IQuestion[]))
         })

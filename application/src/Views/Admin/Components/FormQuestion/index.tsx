@@ -47,7 +47,7 @@ export const QuestionList = () => {
       axios({
         method: 'GET',
         //headers: [{key: loginInfo.login.key}],
-        url: "https://localhost:44385/questions/" + formId
+        url: "https://project.sprantonen.com/questions/" + formId
       }).then(res => {
         if(res.data.questions) dispatch(setQuestions(res.data.questions as IQuestion[]))
       })
@@ -57,7 +57,7 @@ export const QuestionList = () => {
       console.log(question.questionId);
       axios({
         method: 'DELETE',
-        url: 'https://localhost:44385/questions/' + params.id?.toString() + "/" + question.questionId
+        url: 'https://project.sprantonen.com/questions/' + params.id?.toString() + "/" + question.questionId
       }).then(res => {
         fetchQuestionData(params.id as string);
       })

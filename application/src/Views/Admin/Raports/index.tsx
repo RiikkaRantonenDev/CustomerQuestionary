@@ -1,7 +1,7 @@
 import React, { Children, useEffect, useState } from 'react';
 import {Line} from 'react-chartjs-2';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, Collapse, createStyles, Grid, IconButton, Link, List, ListItem, ListItemText, makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography } from '@material-ui/core';
 import { QuestionFormState, setQuestionnaireReport, setQuestionnaireReportSummary, setQuestions } from '../../../Store/Questions/questionsSlice';
@@ -107,6 +107,7 @@ export const Reports = () => {
   const params: { [paramName: string]: string | number | boolean | undefined  } = useParams();
   const [getHeaders, setHeaders] = useState([{ title: "string", field: "string" }]);
   const [getTableData, setTableData] = useState([{id: 0, customer: 0, answers: []}]);
+  const history = useHistory();
 
   useEffect(() => {
     if (params.id) {
@@ -145,7 +146,7 @@ export const Reports = () => {
   const getQuestionnaireFormReport = (formId: any) => {
     axios({
       method: 'GET',
-      url: "https://localhost:44385/questionnaireForm/reports/" + formId
+      url: "https://project.sprantonen.com/questionnaireForm/reports/" + formId
     }).then(res => {
       console.log(res.data);
       dispatch(setQuestionnaireReport(res.data));
@@ -155,7 +156,7 @@ export const Reports = () => {
   const getQuestionnaireFormReportSummaries = (formId: any) => {
     axios({
       method: 'GET',
-      url: "https://localhost:44385/questionnaireForm/reports/summaries/" + formId
+      url: "https://project.sprantonen.com/questionnaireForm/reports/summaries/" + formId
     }).then(res => {
       console.log(res.data);
       dispatch(setQuestionnaireReportSummary(res.data));
@@ -165,7 +166,7 @@ export const Reports = () => {
   const fetchQuestionData = (formId : string) => {
     axios({
       method: 'GET',
-      url: "https://localhost:44385/questions/" + formId
+      url: "https://project.sprantonen.com/questions/" + formId
     }).then(res => {
       if(res.data.questions) dispatch(setQuestions(res.data.questions as IQuestion[]))
     })
@@ -215,7 +216,7 @@ export const Reports = () => {
           <Box  style={{width: '80%', margin: 'auto'}}>
             <Box className={classes.toolBar}>
               <Button><Description></Description>Lataa .csv</Button>
-              <Link>Tilastot</Link>
+              <Link onClick={() => history.push("/reports/charts")}>Kaaviot</Link>
             </Box>
             <TableContainer component={Paper}>
               <Table aria-label="collapsible table">

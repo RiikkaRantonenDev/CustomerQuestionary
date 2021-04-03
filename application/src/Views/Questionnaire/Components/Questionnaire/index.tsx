@@ -76,7 +76,7 @@ export const Questionnaire = () => {
     const postFormAnswer = (values) => {
         axios({
             method: 'POST',
-            url: "https://localhost:44385/questions/customer/" + params.id,
+            url: "https://project.sprantonen.com/questions/customer/" + params.id,
             data: values,
             headers: {
                 'Content-Type': 'application/json'

@@ -64,7 +64,7 @@ export const QuestionFormList = () => {
     const getQuestionnaireForms = () => {
       axios({
           method: 'GET',
-          url: "https://localhost:44385/questionnaireForm"
+          url: "https://project.sprantonen.com/questionnaireForm"
         }).then(res => {
           console.log(res.data);
           dispatch(setForms(res.data))
@@ -74,7 +74,7 @@ export const QuestionFormList = () => {
   const deleteQuestionnaireForm = (questionnaireFormId: string) => {
     axios({
       method: 'DELETE',
-      url: "https://localhost:44385/questionnaireForm/" + questionnaireFormId
+      url: "https://project.sprantonen.com/questionnaireForm/" + questionnaireFormId
     }).then(res => {
       getQuestionnaireForms();
     })

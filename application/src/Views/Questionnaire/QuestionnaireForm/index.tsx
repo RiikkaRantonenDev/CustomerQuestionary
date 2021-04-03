@@ -15,7 +15,7 @@ export const QuestionnaireForm = () => {
         axios({
           method: 'GET',
           //headers: [{key: loginInfo.login.key}],
-          url: "https://localhost:44385/questions/" + params.id
+          url: "https://project.sprantonen.com/questions/" + params.id
         }).then(res => {
           dispatch(setActiveForm(
             {questionnaireFormId: params.id as string,
